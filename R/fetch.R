@@ -7,5 +7,5 @@ drive_ls("Concours/Cheseaux") |>
 
 fs::dir_create("data/champ")
 
-drive_ls("Concours/MaleyChamp") |>
+drive_ls("Concours/CheseauxChamp") |>
   purrr::pwalk(~drive_download(..2, path = paste0("data/champ/", ..1), overwrite = T))

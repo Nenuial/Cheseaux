@@ -8,8 +8,4 @@ listing:
   fields: [Epreuve, title]
 ---
 
-Vous trouverez sur ce site les résultats pour les épreuves du concours de dressage du Club Équestre St-Georges du 26 et 27 septembre.
-
-:::callout-note
-Les épreuves du samedi après-midi sont maintenues !
-:::
+Vous trouverez sur ce site les résultats pour les épreuves du concours de dressage du Club Équestre St-Georges du 24 et 25 août.

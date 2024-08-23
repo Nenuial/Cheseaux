@@ -12,7 +12,7 @@ title-block-banner: "images/banner_cheseaux.png"
 title-block-banner-color: "white"
 
 website:
-  title: "CD Club St-Georges 2023"
+  title: "CD Club St-Georges 2024"
   navbar:
     background: "#76C1F4"
     left:
@@ -37,4 +37,3 @@ format:
       warning: false
 
 editor: visual
-

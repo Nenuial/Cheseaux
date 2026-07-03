@@ -8,4 +8,4 @@ listing:
   fields: [Epreuve, title]
 ---
 
-Vous trouverez sur ce site les résultats pour les épreuves du concours de dressage du Club Équestre St-Georges du 24 et 25 août.
+Vous trouverez sur ce site les résultats pour les épreuves du concours de dressage du Club Équestre St-Georges du 4 et 5 juillet.

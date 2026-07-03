@@ -5,6 +5,7 @@
 .secrets
 /.quarto/
 _site
+_environment
 www
 actuel
 data

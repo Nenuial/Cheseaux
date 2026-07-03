@@ -8,18 +8,25 @@ gs4_auth(path = ".secrets/equievents-368612-5bb2b3c9038e.json")
 drive_auth(path = ".secrets/equievents-368612-5bb2b3c9038e.json")
 
 setup_classes <- function(result_path) {
-  class_id <- stringr::str_match(result_path, ".*R.{1,2}sultats_(.{1,3})\\.xls")[,2]
-  
-  class_data <- classes |> 
+  class_id <- stringr::str_match(
+    result_path,
+    ".*R.{1,2}sultats_(.{1,3})\\.xls"
+  )[, 2]
+
+  class_data <- classes |>
     dplyr::filter(`Épreuve` == class_id)
-  
-  result_ongoing <- TRUE
-  #if (stringr::str_detect(class_data$Actuel, "Carré")) result_ongoing <- TRUE
-  
-  file_copy(path = here("_templates/Results.qmd"), 
-            new_path = here(paste0("results/Results_", class_id, ".qmd")), 
-            overwrite = T) -> qmd_path
-  
+
+  #result_ongoing <- TRUE
+  if (stringr::str_detect(class_data$Actuel, "Carré")) {
+    result_ongoing <- TRUE
+  }
+
+  file_copy(
+    path = here("_templates/Results.qmd"),
+    new_path = here(paste0("results/Results_", class_id, ".qmd")),
+    overwrite = T
+  ) -> qmd_path
+
   yml_replace(
     file = qmd_path,
     what = list(
@@ -36,13 +43,15 @@ setup_classes <- function(result_path) {
 }
 
 carre_off <- function(carre) {
-  carre_filename <- stringr::str_replace(carre, " ", "_") |> 
+  carre_filename <- stringr::str_replace(carre, " ", "_") |>
     stringr::str_replace("é", "e")
-  
-  file_copy(path = here("_templates/Carre_pause.qmd"), 
-            new_path = here(paste0("actuel/", carre_filename, ".qmd")), 
-            overwrite = T) -> qmd_path
-  
+
+  file_copy(
+    path = here("_templates/Carre_pause.qmd"),
+    new_path = here(paste0("actuel/", carre_filename, ".qmd")),
+    overwrite = T
+  ) -> qmd_path
+
   yml_replace(
     file = qmd_path,
     what = list(
@@ -52,11 +61,13 @@ carre_off <- function(carre) {
       )
     )
   )
-  
-  file_copy(path = here("_templates/Carre_pause.qmd"), 
-            new_path = here(paste0("actuel/", carre_filename, "_live.qmd")), 
-            overwrite = T) -> qmd_path
-  
+
+  file_copy(
+    path = here("_templates/Carre_pause.qmd"),
+    new_path = here(paste0("actuel/", carre_filename, "_live.qmd")),
+    overwrite = T
+  ) -> qmd_path
+
   yml_replace(
     file = qmd_path,
     what = list(
@@ -72,22 +83,25 @@ carre_off <- function(carre) {
 
 current_classes <- function(...) {
   dots <- list(...)
-  
+
   dir_ls(
     path = here("data"),
-    regexp = paste0("_", dots$Épreuve,"[.]xls")
-    
+    regexp = paste0("_", dots$Épreuve, "[.]xls")
   ) -> result_path
-  
-  if (length(result_path) == 0) return()
-  
-  carre_filename <- stringr::str_replace(dots$Actuel, " ", "_") |> 
+
+  if (length(result_path) == 0) {
+    return()
+  }
+
+  carre_filename <- stringr::str_replace(dots$Actuel, " ", "_") |>
     stringr::str_replace("é", "e")
-  
-  file_copy(path = here("_templates/Carre_result.qmd"),
-            new_path = here(paste0("actuel/", carre_filename, ".qmd")), 
-            overwrite = T) -> qmd_path
-  
+
+  file_copy(
+    path = here("_templates/Carre_result.qmd"),
+    new_path = here(paste0("actuel/", carre_filename, ".qmd")),
+    overwrite = T
+  ) -> qmd_path
+
   yml_replace(
     file = qmd_path,
     what = list(
@@ -98,11 +112,13 @@ current_classes <- function(...) {
       )
     )
   )
-  
-  file_copy(path = here("_templates/Carre_result.qmd"),
-            new_path = here(paste0("actuel/", carre_filename, "_live.qmd")), 
-            overwrite = T) -> qmd_path
-  
+
+  file_copy(
+    path = here("_templates/Carre_result.qmd"),
+    new_path = here(paste0("actuel/", carre_filename, "_live.qmd")),
+    overwrite = T
+  ) -> qmd_path
+
   yml_replace(
     file = qmd_path,
     what = list(
@@ -117,20 +133,20 @@ current_classes <- function(...) {
   )
 }
 
-drive_get("Concours/Datafiles/Cheseaux") |> 
-  read_sheet() |> 
-  dplyr::mutate(`Épreuve` = as.character(`Épreuve`)) |> 
-  dplyr::mutate(Actuel = as.character(Actuel)) |> 
+drive_get("Concours/Datafiles/Cheseaux") |>
+  read_sheet() |>
+  dplyr::mutate(`Épreuve` = as.character(`Épreuve`)) |>
+  dplyr::mutate(Actuel = as.character(Actuel)) |>
   dplyr::mutate(Actuel = dplyr::if_else(is.na(Actuel), "", Actuel)) -> classes
 
 dir_ls(here("data"), regexp = ".*R.{1,2}sultats_(.{1,3})\\.xls") -> results
 
-results |> 
+results |>
   purrr::walk(setup_classes)
 
-# c("Carré A") |>
-#   purrr::walk(carre_off)
+c("Carré A") |>
+  purrr::walk(carre_off)
 
-# classes |>
-#   dplyr::filter(stringr::str_detect(Actuel, "Carré")) |>
-#   purrr::pwalk(current_classes)
+classes |>
+  dplyr::filter(stringr::str_detect(Actuel, "Carré")) |>
+  purrr::pwalk(current_classes)

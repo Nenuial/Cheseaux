@@ -16,7 +16,7 @@ setup_classes <- function(result_path) {
   class_data <- classes |>
     dplyr::filter(`Épreuve` == class_id)
 
-  #result_ongoing <- TRUE
+  result_ongoing <- TRUE
   if (stringr::str_detect(class_data$Actuel, "Carré")) {
     result_ongoing <- TRUE
   }
